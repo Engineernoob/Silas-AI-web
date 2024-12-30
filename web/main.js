@@ -1,6 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Document ready");
 
+  // Play startup audio by calling the backend API
+  fetch("http://localhost:3000/api/startup-audio")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.message); // Log success message
+    })
+    .catch((error) => {
+      console.error("Error playing startup audio:", error);
+    });
+
   // Select the text element for animation
   const text = document.querySelector(".ask-anything");
 
@@ -182,7 +192,7 @@ $("#MicButton").click(function () {
     $("#chatbox").val(transcript);
 
     // Send the recognized text to the backend
-    fetch("http://localhost:5000/api/message", {
+    fetch("http://localhost:3000/api/message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

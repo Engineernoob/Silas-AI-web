@@ -23,14 +23,6 @@ def process_message():
     response = process_command(user_message)
     return jsonify({"response": response})
 
-# API endpoint to play audio
-@app.route('/api/audio', methods=['GET'])
-def play_audio():
-    # Path to the audio file in the web/assets/images directory
-    audio_folder = os.path.join("web", "assets", "images", "audio")
-    audio_filename = "Jarvis start sound.mp3"  # Replace with the actual file name
-    return send_from_directory(audio_folder, audio_filename)
-
 # Open the Netlify site in Arc browser
 def open_arc_browser():
     time.sleep(2)  # Small delay before opening the browser
