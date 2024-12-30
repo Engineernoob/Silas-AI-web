@@ -1,0 +1,29 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python environment
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+db.sqlite3
+*.db
+
+# Logs
+logs/
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+
+# Other generated files
+package-lock.json
+.env
