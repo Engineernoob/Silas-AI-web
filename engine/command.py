@@ -1,6 +1,5 @@
 import pyttsx3
 import speech_recognition as sr
-import eel
 import time
 import spacy
 import os
@@ -12,12 +11,10 @@ import applescript
 from engine.utils import speak
 from engine.config import ASSISTANT_NAME
 
-
 # Load spaCy language model
 nlp = spacy.load("en_core_web_sm")
 
-@eel.expose
-def takeCommand():
+def take_command():
     """Captures voice input from the user and converts it to text."""
     recognizer = sr.Recognizer()
     attempts = 0
@@ -27,20 +24,15 @@ def takeCommand():
         with sr.Microphone() as source:
             speak("Listening...")
             print("Listening...")
-            eel.DisplayMessage("Listening...")
             recognizer.pause_threshold = 1
             recognizer.adjust_for_ambient_noise(source, duration=1)
-            audio = recognizer.listen(source, 10, 6)
+            audio = recognizer.listen(source, timeout=10, phrase_time_limit=6)
 
         try:
             speak("Recognizing...")
             print("Recognizing...")
-            eel.DisplayMessage("Recognizing...")
             query = recognizer.recognize_google(audio, language="en-us")
             print(f"User said: {query}")
-            eel.DisplayMessage(query)
-            time.sleep(2)
-            eel.ShowHood()
             return query.lower()
 
         except sr.UnknownValueError:
@@ -57,60 +49,40 @@ def takeCommand():
     speak("I'm sorry, I couldn't understand you after multiple attempts.")
     return ""
 
-@eel.expose
-def allCommands():
+def all_commands(query):
     """Processes user commands based on the speech input."""
-    query = ""
-    while not query:
-        query = takeCommand()
+    if not query:
+        return "No command received."
 
     # Process the command using spaCy to identify different intents
     doc = nlp(query)
 
     if "open" in query:
-        from engine.features import openCommand
-        openCommand(query)
+        from engine.features import open_command
+        return open_command(query)
     elif "youtube" in query:
-        from engine.features import PlayYoutube
-        PlayYoutube(query)
+        from engine.features import play_youtube
+        return play_youtube(query)
     elif "reply" in query:
         from engine.features import reply_to_contact
-        reply_to_contact(query)
+        return reply_to_contact(query)
     elif "shut down" in query or "restart" in query or "log out" in query:
-        controlSystem(query)
+        return control_system(query)
     elif "increase volume" in query or "decrease volume" in query:
-        controlVolume(query)
+        return control_volume(query)
     elif "increase brightness" in query or "decrease brightness" in query:
-        controlBrightness(query)
+        return control_brightness(query)
     elif "search" in query or "define" in query:
-        getDefinition(query)
+        return get_definition(query)
     elif "send message" in query or "reply to message" in query:
-        sendMessage(query)
+        return send_message(query)
     elif "read message" in query:
-        readLatestMessage()
+        return read_latest_message()
     else:
-        # Handling more actions and general responses
-        if not respondToGreeting(query):
-            handled = False
-            for token in doc:
-                if token.lemma_ == "open":
-                    from engine.features import openCommand
-                    # Extract the phrase to open
-                    target = " ".join([child.text for child in token.subtree if child.dep_ in ("dobj", "pobj")])
-                    openCommand(target)
-                    handled = True
-                elif token.lemma_ == "play" and "youtube" in query:
-                    from engine.features import PlayYoutube
-                    PlayYoutube(query)
-                    handled = True
-                elif token.lemma_ == "reply":
-                    from engine.features import reply_to_contact
-                    reply_to_contact(query)
-                    handled = True
-            if not handled:
-                speak("I can't run that command, please try again with something else.")
+        if not respond_to_greeting(query):
+            return "Command not recognized. Please try again."
 
-def respondToGreeting(query):
+def respond_to_greeting(query):
     """Handles small talk and general greetings."""
     greetings = {
         "how are you": "I'm just a bunch of code, but I am doing great! How can I help you today?",
@@ -129,48 +101,58 @@ def respondToGreeting(query):
             return True
     return False
 
-def controlSystem(action):
+def control_system(action):
     if "shut down" in action:
         speak("Shutting down the computer.")
         os.system("shutdown now")
+        return "Shutting down the system."
     elif "restart" in action:
         speak("Restarting the computer.")
         os.system("shutdown -r now")
+        return "Restarting the system."
     elif "log out" in action:
         speak("Logging out.")
         os.system("osascript -e 'tell application \"System Events\" to log out'")
+        return "Logging out."
 
-def controlVolume(action):
+def control_volume(action):
     if "increase volume" in action:
         os.system("osascript -e 'set volume output volume (output volume of (get volume settings) + 10)'")
         speak("Increasing the volume.")
+        return "Volume increased."
     elif "decrease volume" in action:
         os.system("osascript -e 'set volume output volume (output volume of (get volume settings) - 10)'")
         speak("Decreasing the volume.")
+        return "Volume decreased."
 
-def controlBrightness(action):
+def control_brightness(action):
     if "increase brightness" in action:
         os.system("brightness +0.1")  # Requires `brightness` tool for macOS
         speak("Increasing brightness.")
+        return "Brightness increased."
     elif "decrease brightness" in action:
         os.system("brightness -0.1")
         speak("Decreasing brightness.")
+        return "Brightness decreased."
 
-def getDefinition(query):
+def get_definition(query):
     query = query.replace("search", "").replace("define", "").strip()
     try:
         definition = wikipedia.summary(query, sentences=2)
         speak(f"According to Wikipedia: {definition}")
+        return definition
     except wikipedia.exceptions.DisambiguationError:
         speak("There are multiple results for this query. Please be more specific.")
+        return "Disambiguation error. Please be more specific."
     except wikipedia.exceptions.PageError:
         speak("I couldn't find information on that topic.")
+        return "No information found on the topic."
 
-def sendMessage(query):
+def send_message(query):
     speak("Who would you like to send a message to?")
-    contact_name = takeCommand()
+    contact_name = take_command()
     speak(f"What is the message for {contact_name}?")
-    message = takeCommand()
+    message = take_command()
 
     try:
         applescript_code = f'''tell application "Messages"
@@ -180,11 +162,13 @@ def sendMessage(query):
         end tell'''
         applescript.run(applescript_code)
         speak(f"Message sent to {contact_name}.")
+        return f"Message sent to {contact_name}."
     except Exception as e:
         speak("Unable to send the message. Please try again later.")
         print(f"Error: {str(e)}")
+        return "Error sending message."
 
-def readLatestMessage():
+def read_latest_message():
     try:
         applescript_code = '''tell application "Messages"
         set latestMessage to (get text of last message of buddy chat 1)
@@ -192,18 +176,8 @@ def readLatestMessage():
         end tell'''
         latest_message = applescript.run(applescript_code).out
         speak(f"You received a new message: {latest_message}")
-        speak("Would you like to reply?")
-        response = takeCommand()
-        if "yes" in response:
-            speak("What would you like to say?")
-            reply_message = takeCommand()
-            applescript_code_reply = f'''tell application "Messages"
-            set targetService to 1st service whose service type = iMessage
-            set targetBuddy to buddy chat 1
-            send "{reply_message}" to targetBuddy
-            end tell'''
-            applescript.run(applescript_code_reply)
-            speak("Your reply has been sent.")
+        return f"New message: {latest_message}"
     except Exception as e:
         speak("Unable to read the latest message. Please try again later.")
         print(f"Error: {str(e)}")
+        return "Error reading the latest message."

@@ -3,21 +3,25 @@ import time
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
-from engine.features import *
-from engine.command import *
+from engine.features import process_command, play_assistant_audio
+from engine.command import all_commands
 
 # Initialize Flask app
 app = Flask(__name__, static_folder="web")
 CORS(app)  # Allow CORS for frontend-backend communication
 
-# API endpoint to handle user input
+@app.route('/api/startup', methods=['GET'])
+def startup():
+    # Play the assistant's audio during initialization
+    play_assistant_audio()
+    return jsonify({"message": "Assistant audio played on startup."})
+
 @app.route('/api/message', methods=['POST'])
 def process_message():
-    data = request.json  # Get JSON data from frontend
+    data = request.json
     user_message = data.get("message", "")
-    # Example logic: process the user input
-    response_message = f"You said: {user_message}"  # Replace this with your actual logic
-    return jsonify({"response": response_message})
+    response = process_command(user_message)
+    return jsonify({"response": response})
 
 # API endpoint to play audio
 @app.route('/api/audio', methods=['GET'])
