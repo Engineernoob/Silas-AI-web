@@ -1,30 +1,38 @@
 import os
-import eel
 import time
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 from engine.features import *
 from engine.command import *
 
-# Initialize Eel by specifying the folder where your HTML, CSS, and JS files are located
-eel.init("web")
+# Initialize Flask app
+app = Flask(__name__)
+CORS(app)  # Allow CORS for frontend-backend communication
 
-playAssistantAudio()
+# API endpoint to handle user input
+@app.route('/api/message', methods=['POST'])
+def process_message():
+    data = request.json  # Get JSON data from frontend
+    user_message = data.get("message", "")
+    # Example logic: process the user input
+    response_message = f"You said: {user_message}"  # Replace this with your actual logic
+    return jsonify({"response": response_message})
 
-# Function to start the Eel server without opening a browser automatically
-def start_eel():
-    eel.start("index.html", mode=None, block=False)
+# API endpoint to play audio
+@app.route('/api/audio', methods=['GET'])
+def play_audio():
+    # Example: Use your playAssistantAudio() function or custom logic
+    playAssistantAudio()
+    return jsonify({"message": "Audio playback initiated"})
 
-# Function to open Arc Browser manually using os.system
+# Open the Netlify site in Arc browser
 def open_arc_browser():
-    time.sleep(2)  # Small delay to give Eel time to start
-    os.system("open -a 'Arc'   https://silasai.netlify.app")  # Open Arc Browser manually
+    time.sleep(2)  # Small delay before opening the browser
+    os.system("open -a 'Arc' https://silasai.netlify.app")
 
-# Step 1: Start Eel server
-start_eel()
-
-# Step 2: Open Arc Browser automatically after Eel server starts
-open_arc_browser()
-
-# Keep the script running and let the Eel server run
-while True:
-    eel.sleep(1)
+# Start the Flask server
+if __name__ == "__main__":
+    # Step 1: Start the backend server
+    open_arc_browser()  # Step 2: Open the Netlify site in Arc browser
+    app.run(host="0.0.0.0", port=5000)
