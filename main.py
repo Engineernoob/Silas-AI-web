@@ -1,13 +1,13 @@
 import os
 import time
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 from engine.features import *
 from engine.command import *
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, static_folder="web")
 CORS(app)  # Allow CORS for frontend-backend communication
 
 # API endpoint to handle user input
@@ -22,9 +22,10 @@ def process_message():
 # API endpoint to play audio
 @app.route('/api/audio', methods=['GET'])
 def play_audio():
-    # Example: Use your playAssistantAudio() function or custom logic
-    playAssistantAudio()
-    return jsonify({"message": "Audio playback initiated"})
+    # Path to the audio file in the web/assets/images directory
+    audio_folder = os.path.join("web", "assets", "images", "audio")
+    audio_filename = "Jarvis start sound.mp3"  # Replace with the actual file name
+    return send_from_directory(audio_folder, audio_filename)
 
 # Open the Netlify site in Arc browser
 def open_arc_browser():
@@ -35,4 +36,4 @@ def open_arc_browser():
 if __name__ == "__main__":
     # Step 1: Start the backend server
     open_arc_browser()  # Step 2: Open the Netlify site in Arc browser
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=3000, debug=True)
