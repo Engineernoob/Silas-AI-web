@@ -12,12 +12,12 @@ playAssistantAudio()
 
 # Function to start the Eel server without opening a browser automatically
 def start_eel():
-    eel.start("index.html", mode=None, host="localhost", port=8000, block=False)
+    eel.start("index.html", mode=None, block=False)
 
 # Function to open Arc Browser manually using os.system
 def open_arc_browser():
     time.sleep(2)  # Small delay to give Eel time to start
-    os.system("open -a 'Arc' http://localhost:8000/index.html")  # Open Arc Browser manually
+    os.system("open -a 'Arc'   https://silasai.netlify.app")  # Open Arc Browser manually
 
 # Step 1: Start Eel server
 start_eel()
