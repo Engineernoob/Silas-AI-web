@@ -27,3 +27,6 @@ Thumbs.db
 # Other generated files
 package-lock.json
 .env
+
+# Local Netlify folder
+.netlify
