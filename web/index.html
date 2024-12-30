@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silas</title>
+
+    <link rel="icon" type="image/png" href="assets/images/Silas Logo.png" />
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Modernizr (for canvas support check) -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"
+      type="text/javascript"
+    ></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery UI (for slider) -->
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- Animate.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <!-- Your custom styles -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+
+    <section id="Oval" class="mb-4">
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="
+              height: 80vh;
+              position: relative;
+              margin-top: 100px;
+              margin-right: 100px;
+              margin-left: 100px;
+            "
+          >
+            <canvas
+              id="canvasOne"
+              width="400"
+              height="400"
+              style="position: absolute"
+            ></canvas>
+            <div
+              id="SilasHood"
+              class="d-flex justify-content-center align-items-center"
+            >
+              <div class="square">
+                <span class="circle"></span>
+                <span class="circle"></span>
+                <span class="circle"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="text-light ask-anything text-center">Ask me anything</h5> 
+        <div class="col-md-12 mt-1 pt-1">
+        <div class="text-center">
+          <div id="TextInput" class="d-flex">
+
+          <input type="text" class="user-input" name="chatbox" id="chatbox" placeholder="type here...">  
+          <button id="MicButton" class="btn btn-primary glow-on-hover">
+            <i class="bi bi-mic"></i>
+          </button>
+          <button id="ChatButton" class="btn btn-primary glow-on-hover">
+            <i class="bi bi-chat-dots"></i>
+          </button>
+          <button id="SettingsButton" class="btn btn-primary glow-on-hover">
+            <i class="bi bi-sliders"></i>
+          </button>
+
+        </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="siriwave" class="mb-4" hidden>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+              <div class="">
+                <p class="text-start text-light mb-4 siri-message">Hello I am Silas.</p>
+                <div id="siri-container" class="siri-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+    <!-- Bootstrap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+    <script src="script.js"></script>
+
+    <!-- Siri-->
+    <script src="https://unpkg.com/siriwave/dist/siriwave.umd.min.js"></script>
+
+    <!-- Custom scripts -->
+    <script src="script.js"></script>
+    <script src="controller.js"></script>
+    <script src="main.js"></script>
+
+    <!-- Eel.js (served by Python Eel) -->
+    <script src="/eel.js"></script>
+  </body>
+</html>
