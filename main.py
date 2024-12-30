@@ -10,12 +10,6 @@ from engine.command import all_commands
 app = Flask(__name__, static_folder="web")
 CORS(app)  # Allow CORS for frontend-backend communication
 
-@app.route('/api/startup', methods=['GET'])
-def startup():
-    # Play the assistant's audio during initialization
-    play_assistant_audio()
-    return jsonify({"message": "Assistant audio played on startup."})
-
 @app.route('/api/message', methods=['POST'])
 def process_message():
     data = request.json
