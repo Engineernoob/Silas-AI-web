@@ -42,6 +42,7 @@ var siriWave = new SiriWave({
   speed: 0.2,
   autostart: true,
 });
+
 // Siri Message animation
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Document ready");
@@ -75,16 +76,31 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// mic button click event
+// Mock function for Mic Button click event
 $("#MicButton").click(function () {
-  eel.playAssistantAudio();
+  console.log("Mic button clicked");
+
+  // Simulate assistant audio functionality
+  playAssistantAudio();
+
+  // Hide the Oval section and show the Siri Wave
   $("#Oval").attr("hidden", true);
   $("#siriwave").attr("hidden", false);
-  eel.allCommands()();
+
+  // Simulate allCommands functionality
+  allCommands();
 });
 
 // Activate Siri Wave
 siriWave.start();
-
 siriWave.setAmplitude(2);
 siriWave.setSpeed(0.2);
+
+// Mock functions to replace `eel` calls
+function playAssistantAudio() {
+  console.log("Simulating assistant audio playback...");
+}
+
+function allCommands() {
+  console.log("Simulating all commands execution...");
+}
